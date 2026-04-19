@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DebriefAI — Interview Recording & Analysis</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-logo">
+    <div class="logo-icon">
+      <span class="logo-rec"></span>
+    </div>
+    <span class="logo-text">DebriefAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#" class="nav-link active" data-page="home">Home</a>
+    <a href="#" class="nav-link" data-page="record">Record</a>
+    <a href="#" class="nav-link" data-page="upload">Upload</a>
+    <a href="#" class="nav-link" data-page="history">History</a>
+  </div>
+  <div id="navUser">
+    <button class="btn-ghost" id="btnLogin">Sign In</button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ══════════════════ HOME ══════════════════ -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span class="rec-dot"></span>
+        <span>DevClash 2026 · PS6 · Live Analysis</span>
+      </div>
+      <h1 class="hero-title">Record your interview.<br><em>Know why you failed.</em></h1>
+      <p class="hero-sub">Press record. Speak. Our AI watches your confidence drop in real-time, detects every filler word, and delivers a brutal honest breakdown the moment you stop.</p>
+      <div class="hero-actions">
+        <button class="btn-record-hero" id="btnGoRecord">
+          <span class="btn-rec-pulse"></span>
+          Start Recording
+        </button>
+        <button class="btn-ghost-lg" id="btnGoUpload">Upload Existing ↗</button>
+      </div>
+
+      <div class="hero-demo">
+        <div class="demo-wave" id="heroWave">
+          <canvas id="heroWaveCanvas" width="700" height="80"></canvas>
+        </div>
+        <div class="demo-stats">
+          <div class="demo-stat">
+            <span class="demo-val" id="statTotal">—</span>
+            <span class="demo-key">Sessions</span>
+          </div>
+          <div class="demo-sep"></div>
+          <div class="demo-stat">
+            <span class="demo-val">94%</span>
+            <span class="demo-key">AI Accuracy</span>
+          </div>
+          <div class="demo-sep"></div>
+          <div class="demo-stat">
+            <span class="demo-val">3×</span>
+            <span class="demo-key">Offer Rate Lift</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how-it-works">
+      <div class="section-eyebrow">How it works</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-icon">⬤</div>
+          <h3>Record or Upload</h3>
+          <p>Use your camera & mic directly in the browser, or upload an existing video/audio file from your device.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-icon">◈</div>
+          <h3>AI Transcribes & Analyzes</h3>
+          <p>Real-time speech-to-text + voice tone analysis. We detect pauses, pace, filler words, and confidence drops as you speak.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-icon">▦</div>
+          <h3>Get the Debrief</h3>
+          <p>Full breakdown: what you said, how you said it, what it cost you, and exactly how to fix it for your next round.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capabilities">
+      <div class="section-eyebrow">What gets analyzed from your recording</div>
+      <div class="cap-grid">
+        <div class="cap-card"><span class="cap-icon">🎙</span><strong>Voice Confidence Score</strong><p>Volume drops, pitch shifts, tremors detected second-by-second</p></div>
+        <div class="cap-card"><span class="cap-icon">⏸</span><strong>Pause & Hesitation Map</strong><p>Every silence over 2s flagged with context of what was just asked</p></div>
+        <div class="cap-card"><span class="cap-icon">📊</span><strong>Filler Word Frequency</strong><p>Um, uh, like, you know — counted, timestamped, ranked by damage</p></div>
+        <div class="cap-card"><span class="cap-icon">🎯</span><strong>Answer Structure Score</strong><p>STAR framework adherence, clarity, depth, and role relevance</p></div>
+        <div class="cap-card"><span class="cap-icon">📉</span><strong>Energy & Pacing Curve</strong><p>Speech rate mapped across the interview — where you rushed or stalled</p></div>
+        <div class="cap-card"><span class="cap-icon">🔴</span><strong>Red Flag Moments</strong><p>Exact timestamps where the interviewer likely formed a negative impression</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ RECORD PAGE ══════════════════ -->
+  <section class="page" id="page-record">
+    <div class="record-layout">
+
+      <!-- LEFT: Camera + Controls -->
+      <div class="record-main">
+        <div class="record-header">
+          <h2 class="page-title">Live Interview Recording</h2>
+          <p class="page-sub">Grant camera & microphone access to begin</p>
+        </div>
+
+        <!-- Video preview -->
+        <div class="video-container" id="videoContainer">
+          <video id="videoPreview" autoplay muted playsinline></video>
+          <div class="video-overlay" id="videoOverlay">
+            <div class="video-placeholder">
+              <div class="cam-icon">⬤</div>
+              <p>Camera preview will appear here</p>
+              <button class="btn-primary" id="btnInitCamera">Enable Camera & Mic</button>
+            </div>
+          </div>
+          <!-- Recording indicator -->
+          <div class="rec-indicator hidden" id="recIndicator">
+            <span class="rec-dot-live"></span> REC
+            <span id="recTimer">00:00</span>
+          </div>
+          <!-- Live confidence meter overlay -->
+          <div class="confidence-hud hidden" id="confidenceHud">
+            <span class="hud-label">Confidence</span>
+            <div class="hud-bar-track">
+              <div class="hud-bar-fill" id="hudBarFill"></div>
+            </div>
+            <span class="hud-val" id="hudVal">—</span>
+          </div>
+        </div>
+
+        <!-- Waveform -->
+        <div class="waveform-container">
+          <canvas id="waveformCanvas" height="64"></canvas>
+          <div class="waveform-label" id="waveformLabel">Microphone inactive</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="record-controls">
+          <button class="ctrl-btn" id="btnStartRec" disabled>
+            <span class="ctrl-icon">⬤</span> Start Recording
+          </button>
+          <button class="ctrl-btn ctrl-pause hidden" id="btnPauseRec">
+            <span class="ctrl-icon">⏸</span> Pause
+          </button>
+          <button class="ctrl-btn ctrl-stop hidden" id="btnStopRec">
+            <span class="ctrl-icon">⏹</span> Stop & Analyze
+          </button>
+        </div>
+
+        <!-- Setup form (shown before recording) -->
+        <div class="pre-record-form" id="preRecordForm">
+          <div class="form-row">
+            <div class="form-section">
+              <label class="form-label">Target Role <span class="req">*</span></label>
+              <input type="text" id="recRole" class="form-input" placeholder="e.g. Software Engineer at Google"/>
+            </div>
+            <div class="form-section">
+              <label class="form-label">Interview Type</label>
+              <select id="recType" class="form-input">
+                <option value="behavioral">Behavioral</option>
+                <option value="technical">Technical</option>
+                <option value="case">Case Study</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Live Transcript + Stats -->
+      <div class="record-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Live Transcript
+            <span class="live-badge" id="liveBadge">OFFLINE</span>
+          </div>
+          <div class="transcript-box" id="transcriptBox">
+            <p class="transcript-placeholder">Your speech will appear here in real-time as you talk…</p>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Live Stats</div>
+          <div class="live-stats-grid">
+            <div class="live-stat">
+              <span class="ls-val" id="lsFillers">0</span>
+              <span class="ls-key">Filler Words</span>
+            </div>
+            <div class="live-stat">
+              <span class="ls-val" id="lsPauses">0</span>
+              <span class="ls-key">Long Pauses</span>
+            </div>
+            <div class="live-stat">
+              <span class="ls-val" id="lsWords">0</span>
+              <span class="ls-key">Words Spoken</span>
+            </div>
+            <div class="live-stat">
+              <span class="ls-val" id="lsWpm">—</span>
+              <span class="ls-key">Words/Min</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Confidence Timeline</div>
+          <div class="mini-timeline" id="miniTimeline"></div>
+          <canvas id="confidenceCanvas" height="80" style="width:100%"></canvas>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Detected Issues</div>
+          <div id="liveIssues" class="live-issues">
+            <p class="no-issues">Recording not started</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ UPLOAD PAGE ══════════════════ -->
+  <section class="page" id="page-upload">
+    <div class="page-header">
+      <h2 class="page-title">Upload Interview Recording</h2>
+      <p class="page-sub">Upload a video or audio file from a past interview</p>
+    </div>
+
+    <div class="upload-layout">
+      <div class="upload-form-panel">
+
+        <div class="dropzone" id="dropzone">
+          <div class="dz-icon">⬆</div>
+          <div class="dz-text">Drop your video or audio file here</div>
+          <div class="dz-sub">MP4, WebM, MOV, MP3, WAV, M4A · Max 500MB</div>
+          <button class="btn-ghost" id="btnPickFile">Browse Files</button>
+          <input type="file" id="fileInput" accept="video/*,audio/*" hidden/>
+        </div>
+
+        <div class="upload-preview hidden" id="uploadPreview">
+          <div class="preview-media" id="previewMedia"></div>
+          <div class="preview-info" id="previewInfo"></div>
+          <button class="btn-ghost btn-sm" id="btnClearFile">✕ Remove</button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-section">
+            <label class="form-label">Target Role <span class="req">*</span></label>
+            <input type="text" id="uploadRole" class="form-input" placeholder="e.g. Senior PM at Stripe"/>
+          </div>
+          <div class="form-section">
+            <label class="form-label">Interview Type</label>
+            <select id="uploadType" class="form-input">
+              <option value="behavioral">Behavioral</option>
+              <option value="technical">Technical</option>
+              <option value="case">Case Study</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Additional Context <span class="opt">(optional)</span></label>
+          <textarea id="uploadContext" class="form-textarea" rows="3"
+            placeholder="Any context about this interview? Questions you remember being asked?"></textarea>
+        </div>
+
+        <button class="btn-primary btn-full" id="btnAnalyzeUpload" disabled>
+          <span id="uploadLabel">⚡ Transcribe & Analyze</span>
+          <span id="uploadSpinner" class="spinner hidden"></span>
+        </button>
+        <p class="form-note">Audio is transcribed locally in-browser · No file is uploaded to our servers</p>
+      </div>
+
+      <div class="upload-info-panel">
+        <div class="info-card">
+          <h4>Supported Formats</h4>
+          <ul class="format-list">
+            <li><span class="fmt-badge vid">VIDEO</span> MP4, WebM, MOV, AVI, MKV</li>
+            <li><span class="fmt-badge aud">AUDIO</span> MP3, WAV, M4A, OGG, FLAC</li>
+          </ul>
+        </div>
+        <div class="info-card tip-card">
+          <span class="tip-tag">HOW IT WORKS</span>
+          <p>Your file stays in the browser. We use the Web Speech API and audio analysis to extract speech, measure voice patterns, and detect confidence levels — then Claude AI synthesizes everything into your debrief.</p>
+        </div>
+        <div class="info-card tip-card" style="border-color:rgba(232,64,64,0.3);background:rgba(232,64,64,0.05)">
+          <span class="tip-tag" style="color:var(--red);border-color:rgba(232,64,64,0.4)">BEST RESULTS</span>
+          <p>Use clear audio with minimal background noise. Zoom recordings, Loom recordings, and phone voice memos all work great.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ PROCESSING PAGE ══════════════════ -->
+  <section class="page" id="page-processing">
+    <div class="processing-center">
+      <div class="processing-animation">
+        <div class="proc-ring proc-ring-1"></div>
+        <div class="proc-ring proc-ring-2"></div>
+        <div class="proc-ring proc-ring-3"></div>
+        <div class="proc-icon">◈</div>
+      </div>
+      <h2 class="proc-title" id="procTitle">Analyzing your interview…</h2>
+      <p class="proc-sub" id="procSub">Transcribing audio and detecting speech patterns</p>
+      <div class="proc-steps">
+        <div class="proc-step" id="pstep1"><span class="pstep-dot active"></span>Transcribing speech</div>
+        <div class="proc-step" id="pstep2"><span class="pstep-dot"></span>Analyzing voice patterns</div>
+        <div class="proc-step" id="pstep3"><span class="pstep-dot"></span>Scoring answer structure</div>
+        <div class="proc-step" id="pstep4"><span class="pstep-dot"></span>Generating debrief report</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ RESULTS PAGE ══════════════════ -->
+  <section class="page" id="page-results">
+    <div class="results-topbar">
+      <div>
+        <h2 class="page-title">Interview Debrief</h2>
+        <p class="page-sub" id="resultsSubtitle">—</p>
+      </div>
+      <div class="results-actions">
+        <button class="btn-ghost btn-sm" id="btnPlayback">▶ Playback</button>
+        <button class="btn-ghost btn-sm" id="btnNewSession">+ New Session</button>
+        <button class="btn-ghost btn-sm" id="btnSaveReport">💾 Save</button>
+      </div>
+    </div>
+
+    <!-- Score Banner -->
+    <div class="score-banner" id="scoreBanner"></div>
+
+    <!-- Results Grid -->
+    <div class="results-grid">
+      <!-- LEFT COL: Timeline + Transcript -->
+      <div class="results-left">
+        <!-- Audio Timeline -->
+        <div class="result-card">
+          <div class="rc-title">Interview Timeline</div>
+          <div class="audio-timeline" id="audioTimeline">
+            <canvas id="timelineCanvas" height="80"></canvas>
+            <div class="timeline-events" id="timelineEvents"></div>
+          </div>
+          <div class="timeline-legend">
+            <span><span class="leg-dot" style="background:var(--red)"></span>Low confidence</span>
+            <span><span class="leg-dot" style="background:var(--orange)"></span>Filler word burst</span>
+            <span><span class="leg-dot" style="background:var(--accent)"></span>Long pause</span>
+            <span><span class="leg-dot" style="background:var(--green)"></span>Strong answer</span>
+          </div>
+        </div>
+
+        <!-- Transcript with annotations -->
+        <div class="result-card">
+          <div class="rc-title">Annotated Transcript
+            <span class="rc-badge">Click highlights to see issues</span>
+          </div>
+          <div class="annotated-transcript" id="annotatedTranscript"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COL: Tabs -->
+      <div class="results-right">
+        <div class="tab-bar">
+          <button class="tab active" data-tab="breakdown">Breakdown</button>
+          <button class="tab" data-tab="voice">Voice Analysis</button>
+          <button class="tab" data-tab="weaknesses">Weaknesses</button>
+          <button class="tab" data-tab="plan">Plan</button>
+        </div>
+
+        <div class="tab-content active" id="tab-breakdown"><div id="breakdownContent"></div></div>
+        <div class="tab-content" id="tab-voice"><div id="voiceContent"></div></div>
+        <div class="tab-content" id="tab-weaknesses"><div id="weaknessContent"></div></div>
+        <div class="tab-content" id="tab-plan"><div id="planContent"></div></div>
+      </div>
+    </div>
+
+    <!-- Playback Modal -->
+    <div class="playback-modal hidden" id="playbackModal">
+      <div class="pm-content">
+        <button class="pm-close" id="pmClose">✕</button>
+        <div id="pmMedia"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ HISTORY ══════════════════ -->
+  <section class="page" id="page-history">
+    <div class="page-header">
+      <h2 class="page-title">Analysis History</h2>
+      <p class="page-sub">Your saved interview debriefs</p>
+    </div>
+    <div id="historyList" class="history-grid">
+      <div class="empty-state">
+        <div class="empty-icon">◎</div>
+        <p>Sign in to view your saved analyses.</p>
+        <button class="btn-ghost" onclick="openAuthModal()">Sign In →</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay hidden" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <h3 class="modal-title">Welcome to DebriefAI</h3>
+    <p class="modal-sub">Save recordings & track your improvement over time.</p>
+    <div class="form-section"><input type="email" id="authEmail" class="form-input" placeholder="Email address"/></div>
+    <div class="form-section"><input type="password" id="authPassword" class="form-input" placeholder="Password"/></div>
+    <div class="modal-btns">
+      <button class="btn-primary btn-full" id="btnSignIn">Sign In</button>
+      <button class="btn-outline btn-full" id="btnSignUp">Create Account</button>
+    </div>
+    <p class="modal-err hidden" id="authErr"></p>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
